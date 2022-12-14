@@ -1,0 +1,2 @@
+class PigsController < ApplicationController
+end
