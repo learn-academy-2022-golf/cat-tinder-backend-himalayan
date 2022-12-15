@@ -111,6 +111,24 @@ RSpec.describe "Pigs", type: :request do
 
       expect(json_response['image']).to include "can't be blank"
     end
+    it 'can cannot create a pig without a habits of mimimum length of 10' do
+      pig_params = {
+        pig: {
+          name: "Mike The Pig", 
+          breed: 'Teddy Guinea Pig',
+          habits: 'Helping',
+          image:'https://www.istockphoto.com/es/foto/preparado-cuy-guinea-pig-gm497034064-78906333'
+        }
+      }
+
+      post '/pigs', params: pig_params
+
+      expect(response).to have_http_status(422)
+
+      json_response = JSON.parse(response.body)
+
+      expect(json_response['habits']).to include "is too short (minimum is 10 characters)"
+    end
   end
   describe "PATCH /update" do
     it "adds changes to a pig" do
@@ -142,6 +160,156 @@ RSpec.describe "Pigs", type: :request do
   
       # Assure that the created cat has the correct attributes
       expect(pig.name).to eq 'Mike the One and Only Pig'
+    end
+    it "cannot update a cat at a particular ID without a name" do
+
+      Pig.create(
+        name: 'Mike the Pig',
+        breed: 'Teddy Guinea Pig',
+        habits: 'Helping their human with their experiments',
+        image: 'https://www.istockphoto.com/es/foto/preparado-cuy-guinea-pig-gm497034064-78906333'
+      )
+      pig_params = {
+        pig: {
+          name: nil,
+          breed: 'Teddy Guinea Pig',
+          habits: 'Helping their human with their experiments',
+          image: 'https://www.istockphoto.com/es/foto/preparado-cuy-guinea-pig-gm497034064-78906333'
+        }
+      }
+  
+      # Send the request to the server
+      pig = Pig.last
+      patch "/pigs/#{pig.id}", params: pig_params
+  
+      # Assure that we get a success back
+      updated_pig = Pig.find(pig.id)
+
+      expect(response).to have_http_status(422)
+
+      json_response = JSON.parse(response.body)
+
+      expect(json_response['name']).to include "can't be blank"
+    end
+    it "cannot update a cat at a particular ID without a breed" do
+
+      Pig.create(
+        name: 'Mike the Pig',
+        breed: 'Teddy Guinea Pig',
+        habits: 'Helping their human with their experiments',
+        image: 'https://www.istockphoto.com/es/foto/preparado-cuy-guinea-pig-gm497034064-78906333'
+      )
+      pig_params = {
+        pig: {
+          name: 'Mike the Pig',
+          breed: nil,
+          habits: 'Helping their human with their experiments',
+          image: 'https://www.istockphoto.com/es/foto/preparado-cuy-guinea-pig-gm497034064-78906333'
+        }
+      }
+  
+      # Send the request to the server
+      pig = Pig.last
+      patch "/pigs/#{pig.id}", params: pig_params
+  
+      # Assure that we get a success back
+      updated_pig = Pig.find(pig.id)
+
+      expect(response).to have_http_status(422)
+
+      json_response = JSON.parse(response.body)
+
+      expect(json_response['breed']).to include "can't be blank"
+    end
+    it "cannot update a cat at a particular ID without a habits" do
+
+      Pig.create(
+        name: 'Mike the Pig',
+        breed: 'Teddy Guinea Pig',
+        habits: 'Helping their human with their experiments',
+        image: 'https://www.istockphoto.com/es/foto/preparado-cuy-guinea-pig-gm497034064-78906333'
+      )
+      pig_params = {
+        pig: {
+          name: 'Mike the Pig',
+          breed: 'Teddy Guinea Pig',
+          habits: nil,
+          image: 'https://www.istockphoto.com/es/foto/preparado-cuy-guinea-pig-gm497034064-78906333'
+        }
+      }
+  
+      # Send the request to the server
+      pig = Pig.last
+      patch "/pigs/#{pig.id}", params: pig_params
+  
+      # Assure that we get a success back
+      updated_pig = Pig.find(pig.id)
+
+      expect(response).to have_http_status(422)
+
+      json_response = JSON.parse(response.body)
+
+      expect(json_response['habits']).to include "can't be blank"
+    end
+    it "cannot update a cat at a particular ID without a image" do
+
+      Pig.create(
+        name: 'Mike the Pig',
+        breed: 'Teddy Guinea Pig',
+        habits: 'Helping their human with their experiments',
+        image: 'https://www.istockphoto.com/es/foto/preparado-cuy-guinea-pig-gm497034064-78906333'
+      )
+      pig_params = {
+        pig: {
+          name: 'Mike the Pig',
+          breed: 'Teddy Guinea Pig',
+          habits: 'Helping their human with their experiments',
+          image: nil
+        }
+      }
+  
+      # Send the request to the server
+      pig = Pig.last
+      patch "/pigs/#{pig.id}", params: pig_params
+  
+      # Assure that we get a success back
+      updated_pig = Pig.find(pig.id)
+
+      expect(response).to have_http_status(422)
+
+      json_response = JSON.parse(response.body)
+
+      expect(json_response['image']).to include "can't be blank"
+    end
+    it "cannot update a cat at a particular ID without a habits of mimimum length of 10" do
+
+      Pig.create(
+        name: 'Mike the Pig',
+        breed: 'Teddy Guinea Pig',
+        habits: 'Helping their human with their experiments',
+        image: 'https://www.istockphoto.com/es/foto/preparado-cuy-guinea-pig-gm497034064-78906333'
+      )
+      pig_params = {
+        pig: {
+          name: 'Mike the Pig',
+          breed: 'Teddy Guinea Pig',
+          habits: 'Helping',
+          image: 'https://www.istockphoto.com/es/foto/preparado-cuy-guinea-pig-gm497034064-78906333'
+        }
+      }
+  
+      # Send the request to the server
+      pig = Pig.last
+      patch "/pigs/#{pig.id}", params: pig_params
+  
+      # Assure that we get a success back
+      updated_pig = Pig.find(pig.id)
+
+      expect(response).to have_http_status(422)
+
+      json_response = JSON.parse(response.body)
+
+      expect(json_response['habits']).to include "is too short (minimum is 10 characters)"
     end
   end
   describe "DELETE /destroy" do
