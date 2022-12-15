@@ -19,7 +19,7 @@ RSpec.describe "Pigs", type: :request do
     end
   end
   describe "POST /create" do
-    it "creates a pig" do
+    it "can create a pig in the database and recieve the proper response" do
       # The params we are going to send with the request
       pig_params = {
         pig: {
@@ -41,6 +41,75 @@ RSpec.describe "Pigs", type: :request do
   
       # Assure that the created cat has the correct attributes
       expect(pig.name).to eq 'Mike the Pig'
+    end
+    it 'can cannot create a pig without a name' do
+      pig_params = {
+        pig: {
+          
+          breed: 'Teddy Guinea Pig',
+          habits: 'Helping their human with their experiments',
+          image: 'https://www.istockphoto.com/es/foto/preparado-cuy-guinea-pig-gm497034064-78906333'
+        }
+      }
+
+      post '/pigs', params: pig_params
+
+      expect(response).to have_http_status(422)
+
+      json_response = JSON.parse(response.body)
+
+      expect(json_response['name']).to include "can't be blank"
+    end
+    it 'can cannot create a pig without an breed' do
+      pig_params = {
+        pig: {
+          name: "Mike The Pig", 
+          habits: "showing up in places randomly", 
+          image: 'https://www.istockphoto.com/es/foto/preparado-cuy-guinea-pig-gm497034064-78906333'
+        }
+      }
+
+      post '/pigs', params: pig_params
+
+      expect(response).to have_http_status(422)
+
+      json_response = JSON.parse(response.body)
+
+      expect(json_response['breed']).to include "can't be blank"
+    end
+    it 'cannot create a pig without habits' do
+      pig_params = {
+        pig: {
+          name: "Mike The Pig", 
+          breed: 'Teddy Guinea Pig',  
+          image:'https://www.istockphoto.com/es/foto/preparado-cuy-guinea-pig-gm497034064-78906333'
+        }
+      }
+
+      post '/pigs', params: pig_params
+
+      expect(response).to have_http_status(422)
+
+      json_response = JSON.parse(response.body)
+
+      expect(json_response['habits']).to include "can't be blank"
+    end
+    it 'can cannot create a pig without an image' do
+      pig_params = {
+        pig: {
+          name: "Mike The Pig", 
+          breed: 'Teddy Guinea Pig',
+          habits: 'Helping their human with their experiments'
+        }
+      }
+
+      post '/pigs', params: pig_params
+
+      expect(response).to have_http_status(422)
+
+      json_response = JSON.parse(response.body)
+
+      expect(json_response['image']).to include "can't be blank"
     end
   end
   describe "PATCH /update" do

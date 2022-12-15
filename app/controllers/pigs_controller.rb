@@ -6,7 +6,11 @@ class PigsController < ApplicationController
   
     def create
         pig = Pig.create(pig_params)
-        render json: pig
+        if pig.valid?
+            render json: pig
+        else
+            render json: pig.errors, status:422
+        end
     end
   
     def update
